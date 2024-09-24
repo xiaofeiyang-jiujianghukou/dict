@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaofeiyang.dict.mapper.DictTypeMapper">
+
+    <select id="pageList" resultType="com.xiaofeiyang.dict.controller.dto.DictTypeListResDTO">
+        SELECT
+            dt.id,
+            dt.code,
+            dt.name,
+            dt.effective_status,
+            dtsr.show_code
+        FROM
+            dict_type dt
+            LEFT JOIN dict_type_show_relation dtsr ON dtsr.dict_type_code = dt.code AND dtsr.status = 1
+        WHERE
+            dt.status = 1
+            AND dt.effective_status = 1
+            <if test="req.code != null and req.code != ''">
+                AND dt.code = #{req.code}
+            </if>
+            <if test="req.name != null and req.name != ''">
+                AND dt.name LIKE CONCAT('%', #{req.name}, '%')
+            </if>
+            <if test="req.showCode != null and req.showCode != ''">
+                AND dtsr.show_code = #{req.showCode}
+            </if>
+    </select>
+</mapper>
